@@ -1,3 +1,4 @@
+"use client"
 import { useEffect } from "react"
 import { LockClosedIcon, EnvelopeIcon, UserIcon , EyeIcon} from "@heroicons/react/24/solid";
 import {FcGoogle } from 'react-icons/fc'
@@ -5,7 +6,7 @@ import {FaGithub} from 'react-icons/fa'
 import { useState } from "react";
  
 
-const Login = () => {
+const page = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -134,4 +135,4 @@ const Login = () => {
   );
 }
 
-export default Login
+export default page
