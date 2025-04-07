@@ -1,33 +1,20 @@
  
-import LandingBot from "@/components/3d/LandingBot"
- 
- 
+import Navbar from '@/components/navbar/Navbar'
+import { Spotlight } from '@/components/spotlight/Spotlight'
+import { Menu, Sparkle } from 'lucide-react'
+import { HeroGeometric } from '@/components/ui/shape-landing-hero'
 export default function Home() {
- 
   return (
+    <main className="bg-black text-white min-h-screen">
+       <section id='#'>
+        <HeroGeometric
+                       badge='Genesis.ai'
+                       title1='IMAGINE. TYPE. CREATE'
+                       title2='From Brain to Pixels at the speed of thought.'
 
-     <div className="w-screen h-screen abolute top-0 left-0 bg-[#e3e3e3]">
+       /></section>
+        
        
-      <section id="#home"> 
-      <div className="flex items-center justify-between"> 
-        {/* Left side */}
-        <div className="w-1/2 relative ">
-          <title></title>
-        </div>
-
-        {/* Right side */}
-      <div className="w-1/2 h-screen relative bg-red"> 
-      <div className="max-w-screen h-screen rounded-xl flex items-center justify-end"> 
-      <LandingBot/>
-      </div>
-      </div>
-      </div>
-      </section>
-      <section>
-        <div>
-           
-        </div>
-      </section>
-    </div>
-  );
+    </main>
+  )
 }

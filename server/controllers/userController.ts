@@ -1,21 +1,22 @@
-import userModel from "../models/userModel.js";
-import validator from 'validator'
-import bycrypt from 'bcrypt'
-import JWT from 'jsonwebtoken'
+import { PrismaClient } from "@prisma/client";
+import express from "express"
+import { Request,Response } from "express";
 import "dotenv"
+import bcrypt from "bcrypt"
+import { User } from "../types";
 
-const createToken = (id) =>{
-    return JWT.sign({id},process.env.JWT_SECRET)
-}
+const prisma = new PrismaClient()
  
-const loginUser = async (req,res) => {
+ 
+const loginUser = async (req:Request,res:Response) => {
         try {
-            const {email,password} = req.body;
-            const user = await userModel.findOne({email});
+            const {email,password} = req.body as User;
+            const user = await prisma.user.findFirst(email);
             if(!user){
                 return res.json({success:false , message:"User doesn't exists"})
             }
-            const isMatch = await bycrypt.compare(password,user.password);
+            const isMatch = await bcrypt.compare(password,user.password);
+            cons
             if(isMatch){
                 const token = createToken(user._id)
                 res.json({success:true,token})
