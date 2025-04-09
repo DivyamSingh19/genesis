@@ -7,14 +7,14 @@ export default function Home() {
   return (
     <main className="bg-black text-white min-h-screen">
        <section id='#'>
-        <HeroGeometric
-                       badge='Genesis.ai'
-                       title1='IMAGINE. TYPE. CREATE'
-                       title2='From Brain to Pixels at the speed of thought.'
-
-       /></section>
         
-       
+        </section>
+        <section>
+
+        </section>
+        <section>
+          
+        </section>
     </main>
   )
 }

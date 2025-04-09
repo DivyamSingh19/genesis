@@ -23,7 +23,7 @@ export default function Register() {
     const fullName = `${formData.name} `;
     
     try {
-      const response = await axios.post( "http://localhost:4000/api/user/register", {
+      const response = await axios.post( "http://localhost:4000/api/auth/register-user", {
         name: fullName,
         email: formData.email,
         password: formData.password,

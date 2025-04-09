@@ -67,8 +67,8 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		backgroundImage: {
-  			'grid-pattern': ' 
-  			'grid-pattern-light': '
+  			'grid-pattern': ' ',
+  			'grid-pattern-light': ''
   		}
   	}
   },
