@@ -8,9 +8,6 @@ import { createToken  } from "../utils/tokens";
  
 const prisma = new PrismaClient()
  
-
-
-
 async function registerUser(req:Request,res:Response) {
     try {
         const {username,email,password} = req.body as User
@@ -22,23 +19,33 @@ async function registerUser(req:Request,res:Response) {
         }
         const user = await prisma.user.findFirst({where:{email}})
         if(user){
-            return res.json({
+             return res.json({
                 success:false,
                 message:"User already exists"
             })
         }
+        const salt = await bcrypt.genSalt(10);
+        const hashedpassword = await bcrypt.hash(password,salt)
         const newUser = await prisma.user.create({
             data:{
-                id,
                 username,
                 email,
-                password,
+                password : hashedpassword,
             }
         })
-        const token = createToken(id)
-        return res.status(200).json({
+        const token = createToken(newUser.id)
+        
+        const metadata = {
+            name : username,
+            email ,
+            userId : newUser.id,
+            credit : newUser.credit
+        }
+          res.status(200).json({
             success:true,
-            message:"User created successfully"
+            message:"User created successfully",
+            token,
+            metadata
         })
     } catch (error) {
         console.log(error)
@@ -51,6 +58,46 @@ async function registerUser(req:Request,res:Response) {
 async function loginUser(req:Request,res:Response) {
     try {
         const {email,password} = req.body as User
+        if(!email || !password){
+            return res.json({
+                success:false,
+                message:"All fields are required"
+            })
+        }
+        const user = await prisma.user.findFirst({where:{email},select:{username:true,id:true,credit:true,password:true}})
+        if(!user){
+            return res.status(401).json({
+                success:false,
+                message:"User doesnot exist"
+            })
+        }
+        const isMatch = await bcrypt.compare(password,user.password)
+        if(!user){
+            return res.json({
+                success:false,
+                message:"User does not exist"
+            })
+        }
+        if(isMatch){
+            const token = createToken(user.id)
+            const metadata = {
+                name:user.username,
+                email,
+                credits : user.credit,
+                userId :user.id
+            }
+             res.status(200).json({
+                success:true,
+                message:"Login successful",
+                token,
+                metadata
+            })
+        }else{
+            res.status(401).json({
+                success:false,
+                message:"Invalid Credentials"
+            })
+        }
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -60,71 +107,3 @@ async function loginUser(req:Request,res:Response) {
     }
 }
 export {registerUser,loginUser}
- 
-// const loginUser = async (req:Request,res:Response) => {
-//         try {
-//             const {email,password} = req.body as User;
-//             const user = await prisma.user.findFirst({(where:email),selec});
-//             if(!user){
-//                 return res.json({success:false , message:"User doesn't exists"})
-//             }
-//             const isMatch = await bcrypt.compare(password,user.password);
-//             const metadata ={
-//                 name,
-//                 email,
-//                 password
-//             }
-//             if(isMatch){
-//                 const token = createToken(user._id)
-//                 res.json({success:true,token})
-//             }else{
-//                 res.json({success:false,message:'Invalid credentials'})
-//             }
-            
-//         } catch (error) {
-//             console.log(error);
-//             res.json({success:false,message:error.message})
-//         }
-// }
-
- 
-// const registerUser = async (req,res) => {
-//     try {
-//         const {name,email,password} = req.body;
-          
-//         const exists = await userModel.findOne({email});
-//         if(exists){
-//             return res.json({success:false, message : "User already exists"})
-//         }
-
-        
-//         if(!validator.isEmail(email)){
-//             return res.json({success:false, message:"Please enter a valid email"});
-//         }
-//         if(password.length<8){
-//             return res.json({success:false, message:"Please enter a strong password"});
-//         }
-         
-//         const salt = await bycrypt.genSalt(10)
-        
-         
-//         const hashedPassword = await bycrypt.hash(password,salt)
-
-//         const newUser = new userModel({
-//             name,
-//             email,
-//             password:hashedPassword
-//         })
-//         const user = await newUser.save()
-
-//         const token = createToken(user._id)
-
-//         res.json({success:true , token})
-
-//     } catch (error) {
-//         console.log(error);
-//         res.json({success:false,message:error.message})
-//     }
-// }
-
-// export {loginUser , registerUser }
