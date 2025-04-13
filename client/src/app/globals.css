@@ -2,3 +2,29 @@
 @tailwind components;
 @tailwind utilities;
  
+
+.text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    position: relative;
+    display: inline-block;
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+  
+  .animate-pulse {
+    animation: pulse 4s infinite ease-in-out;
+  }
+  
+  .delay-700 {
+    animation-delay: 0.7s;
+  }
+  
+  .delay-1000 {
+    animation-delay: 1s;
+  }

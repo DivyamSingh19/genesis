@@ -16,9 +16,12 @@ import {
   Send,
   MessageSquareText
 } from "lucide-react";
+import AuthLayout from '@/layout/AuthLayout';
 
 export default function HomePage() {
   return (
+    <div> 
+     <AuthLayout> 
     <div className="flex h-screen bg-zinc-900 text-white">
       
       <div className="w-56 border-r border-zinc-800 bg-zinc-950/50 flex flex-col hidden md:block">
@@ -115,6 +118,8 @@ export default function HomePage() {
           </div>
         </main>
       </div>
+    </div>
+    </AuthLayout>
     </div>
   );
 }

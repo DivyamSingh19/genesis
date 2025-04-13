@@ -3,9 +3,10 @@ import { Request,Response } from "express";
 import cors from "cors"
 import connectCloudinary from "./config/cloudinary";
 import userRouter from "./routes/userRoutes";
+import dotenv from "dotenv"
 const app = express();
 const port =process.env.PORT || 4000
- 
+dotenv.config()
  
 
 
