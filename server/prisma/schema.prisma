@@ -20,7 +20,8 @@ model User {
   password String 
   profile UserProfile?
   credit   Int @default(50)
-   membership Membership?
+  membership Membership?
+  chat     Chat?
 }
 model UserProfile{
   id String @id @default(uuid()) 
@@ -34,7 +35,8 @@ model Chat {
   id String @id @default(uuid())
   prompt String 
   response String
-
+  userId String @unique
+  user User @relation(fields: [userId],references: [id])
 }
 
 model Membership {
