@@ -29,7 +29,7 @@ export default function Home() {
                 </p>
                 
                 <div className="flex flex-wrap gap-4">
-                  <Link href="/signup" className="bg-purple-600 hover:bg-purple-700 transition duration-200 text-white px-8 py-4 rounded-full font-medium text-lg">
+                  <Link href="/auth/register" className="bg-purple-600 hover:bg-purple-700 transition duration-200 text-white px-8 py-4 rounded-full font-medium text-lg">
                     Get started
                   </Link>
                   

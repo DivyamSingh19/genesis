@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-black relative overflow-hidden shadow-2xl">
-      {/* Background decorative shapes */}
+      
       <div className="absolute inset-0 w-full h-full overflow-hidden">
        
         <div className="absolute w-64 h-64 bg-yellow-400 rounded-full -top-20 -left-20"></div>
@@ -80,6 +80,12 @@ export default function LoginPage() {
                 className="w-full p-3 border border-gray-200 rounded-full text-base focus:outline-none focus:border-indigo-500 shadow-md"
                 required
               />
+            </div>
+            <div className='flex items-center justify-between'>
+              <button className="w-full p-3 border border-gray-200 rounded-full text-base focus:outline-none focus:border-indigo-500 shadow-md">Login with Google</button>
+              <button className="w-full p-3 border border-gray-200 rounded-full text-base focus:outline-none focus:border-indigo-500 shadow-md">Login with Github</button>
+
+              <br></br>
             </div>
             <div className='flex items-center justify-center'> 
             <button 
