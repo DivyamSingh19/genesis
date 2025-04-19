@@ -1,6 +1,9 @@
 import React from 'react'
 import Link from "next/link"
 const Navbar = () => {
+  const handleCick = () =>{
+     
+  }
   return (
     <div>
       <nav className="flex justify-between items-center py-4 px-8 md:px-12 lg:px-16">
@@ -18,9 +21,7 @@ const Navbar = () => {
           <Link href="#features" className="hover:text-purple-300 transition duration-200">Features</Link>
           <Link href="#pricing" className="hover:text-purple-300 transition duration-200">Pricing</Link>
           <Link href="#about" className="hover:text-purple-300 transition duration-200">About</Link>
-          <Link href="#blog" className="hover:text-purple-300 transition duration-200">Blog</Link>
-          <Link href="#docs" className="hover:text-purple-300 transition duration-200">Docs</Link>
-          <Link href="#examples" className="hover:text-purple-300 transition duration-200">Examples</Link>
+          <Link href=""></Link>
         </div>
         
         <div className="flex items-center space-x-4">
