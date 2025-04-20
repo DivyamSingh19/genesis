@@ -1,13 +1,16 @@
-import React from 'react'
-import LoginBot from "@/components/3d/LoginBot"
+import React from "react";
+
+import  PricingDemo  from "@/components/pricing/Pricing";
 
 const page = () => {
   return (
     <div>
-      <div className='bg-black'></div>
-      <LoginBot/>
-    </div>
-  )
-}
+      <div className="bg-black"></div>
+       
+         <PricingDemo/>
+      </div>
+     
+  );
+};
 
-export default page
+export default page;

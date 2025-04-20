@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,11 +9,63 @@ import {
   Send,
   MessageSquareText,
   ChevronLeft,
+  Loader2
 } from "lucide-react";
 import Image from "next/image";
 import localImage from "./image.png";
 
 export default function HomePage() {
+  const [prompt, setPrompt] = useState("");
+  const [currentPrompt, setCurrentPrompt] = useState("");
+  const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const generateImage = async () => {
+    if (!prompt.trim()) return;
+    
+    setLoading(true);
+    setError(null);
+    const modelApi = process.env.NEXT_PUBLIC_MODEL_URL;
+    try {
+      const response = await fetch(`${modelApi}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          membership_type: "basic" 
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.image_urls && data.image_urls.length > 0) {
+        setGeneratedImageUrl(data.image_urls[0]);
+        setCurrentPrompt(prompt);
+        setPrompt("");
+      } else {
+        throw new Error("No images were generated");
+      }
+    } catch (err) {
+      console.error("Error generating image:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const retryPrompt = () => {
+    if (currentPrompt) {
+      setPrompt(currentPrompt);
+    }
+  };
+
   return (
     <div className="bg-black">
       <div className="flex h-screen bg-black text-white">
@@ -58,58 +111,63 @@ export default function HomePage() {
              Spark of genius? Let&apos;s shape it!
             </h1>
 
-            {/* Static Prompt Section */}
-            <div className="w-full max-w-xl mb-8">
-              <Card className="bg-zinc-900 border-zinc-800 rounded-xl">
-                <CardContent className="p-5">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-semibold text-white">Current prompt</h3>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-xs rounded-full bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
-                    >
-                      Retry prompt
-                    </Button>
-                  </div>
-                  <p className="text-zinc-400 text-sm mb-4">
-                    "Create a fantasy bird with vibrant, multicolored feathers,
-                    featuring a mix of deep blues, fiery oranges, and soft
-                    pinks. The bird has a regal and majestic posture, with
-                    intricate, detailed plumage resembling fine brushstrokes.
-                    Surrounded by large, surreal feathers in warm tones."
-                  </p>
-
-                  {/* Static Image Placeholder */}
-                  <div className="relative rounded-xl overflow-hidden bg-zinc-900 aspect-[4/3] mb-3">
-                    <Image
-                      src={localImage}
-                      alt="AI generated fantasy bird with colorful feathers"
-                      fill
-                      priority
-                      className="object-cover"
-                      quality={100}
-                    />
-                    <div className="absolute bottom-3 right-3">
+            {/* Dynamic Prompt Section */}
+            {(currentPrompt || generatedImageUrl) && (
+              <div className="w-full max-w-xl mb-8">
+                <Card className="bg-zinc-900 border-zinc-800 rounded-xl">
+                  <CardContent className="p-5">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-semibold text-white">Current prompt</h3>
                       <Button
+                        onClick={retryPrompt}
+                        variant="ghost"
                         size="sm"
-                        variant="secondary"
-                        className="bg-black/70 hover:bg-black/90 text-white text-xs font-normal rounded-full px-3 py-1 flex items-center gap-1"
+                        className="text-xs rounded-full bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                       >
-                        
-                        Output
+                        Retry prompt
                       </Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                    <p className="text-zinc-400 text-sm mb-4">
+                      "{currentPrompt || "Create a fantasy bird with vibrant, multicolored feathers, featuring a mix of deep blues, fiery oranges, and soft pinks. The bird has a regal and majestic posture, with intricate, detailed plumage resembling fine brushstrokes. Surrounded by large, surreal feathers in warm tones."}"
+                    </p>
+
+                    {/* Dynamic Image Display */}
+                    <div className="relative rounded-xl overflow-hidden bg-zinc-900 aspect-[4/3] mb-3">
+                      <Image
+                        src={generatedImageUrl || localImage}
+                        alt="AI generated image based on prompt"
+                        fill
+                        priority
+                        className="object-cover"
+                        quality={100}
+                      />
+                      <div className="absolute bottom-3 right-3">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="bg-black/70 hover:bg-black/90 text-white text-xs font-normal rounded-full px-3 py-1 flex items-center gap-1"
+                        >
+                          Output
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
             <div className="w-full max-w-xl mb-10">
               <div className="relative">
                 <Input
                   className="pr-24 py-6 text-base bg-zinc-900 border-zinc-800 text-white placeholder-zinc-500 rounded-xl"
                   placeholder="Generate anything..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && !loading) {
+                      generateImage();
+                    }
+                  }}
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
                   <Button
@@ -130,8 +188,14 @@ export default function HomePage() {
                     size="icon"
                     variant="ghost"
                     className="h-8 w-8 rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
+                    onClick={generateImage}
+                    disabled={loading || !prompt.trim()}
                   >
-                    <Send className="h-4 w-4" />
+                    {loading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -145,6 +209,9 @@ export default function HomePage() {
                   Auto
                   <ChevronLeft className="h-3 w-3 ml-1 rotate-270" />
                 </Button>
+                {error && (
+                  <div className="ml-3 text-red-400 text-xs">{error}</div>
+                )}
               </div>
             </div>
 
