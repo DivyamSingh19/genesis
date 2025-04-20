@@ -47,13 +47,13 @@ export default function LoginPage() {
           const metadata = {
             name: response.data.metadata?.name || response.data.name,
             email: response.data.metadata?.email || userEmail,
-            credits: response.data.metadata?.credits || response.data.credits,
+            credit: response.data.metadata?.credit || response.data.credit,
             userId: response.data.metadata?.userId || response.data.userId
           };
           
          
           localStorage.setItem('userName', metadata.name);
-          localStorage.setItem('userCredits', metadata.credits.toString());
+          localStorage.setItem('userCredits', metadata.credit.toString());
           localStorage.setItem('userId', metadata.userId);
           
           
