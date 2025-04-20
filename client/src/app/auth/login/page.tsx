@@ -28,7 +28,7 @@ export default function LoginPage() {
       
       console.log("Submitting login to:", `${apiUrl}/api/auth/login-user`);
       
-      const response = await axios.post(`${apiUrl}/api/auth/login-user`, {
+      const response = await axios.post("http://localhost:4000/api/auth/login-user", {
         email,
         password
       });
@@ -36,17 +36,33 @@ export default function LoginPage() {
       console.log('Login response:', response.data);
       
       if (response.data) {
-        // Try to extract email from different possible response structures
+        
         const userEmail = response.data.email || response.data.user?.email || email;
         
         if (typeof window !== 'undefined') {
+          
           localStorage.setItem('userEmail', userEmail);
+          
+          
+          const metadata = {
+            name: response.data.metadata?.name || response.data.name,
+            email: response.data.metadata?.email || userEmail,
+            credits: response.data.metadata?.credits || response.data.credits,
+            userId: response.data.metadata?.userId || response.data.userId
+          };
+          
+         
+          localStorage.setItem('userName', metadata.name);
+          localStorage.setItem('userCredits', metadata.credits.toString());
+          localStorage.setItem('userId', metadata.userId);
+          
+          
+          localStorage.setItem('userMetadata', JSON.stringify(metadata));
         }
         
         setSuccess(true);
         
-        // Redirect after a brief delay
-        setTimeout(() => router.push('/model'), 1500);
+        setTimeout(() => router.push('/model'), 1200);
       } else {
         throw new Error('Empty response from server');
       }
@@ -61,8 +77,7 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
-  };
-
+  }
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-black relative overflow-hidden shadow-2xl">
       {/* Colorful blobs with blur effect in dark theme */}

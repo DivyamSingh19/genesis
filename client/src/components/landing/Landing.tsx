@@ -1,164 +1,106 @@
-import React from "react";
-import { Sparkles, Image, Clock, Award, ArrowRight } from "lucide-react";
-import { BackgroundBeams } from "../ui/Background-Beams";
+"use client";
 
-export default function Landing() {
+
+import { motion } from "motion/react";
+
+export function Landing() {
   return (
-    <div className="relative min-h-screen w-full bg-black overflow-hidden">
-      {/* Hero Section */}
-      <main className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-12 md:pt-24">
-        <div className="inline-block mb-6 p-2 bg-blue-900/20 rounded-full">
-          <Sparkles size={24} className="text-blue-500" />
-        </div>
-        <h2 className="text-blue-500 text-xl font-medium">AI IMAGE CREATOR</h2>
-        <h1 className="text-white text-4xl md:text-6xl font-bold mt-2 mb-6">
-          Bring Your <span className="text-blue-500">Imagination</span> to Life
+    <div className="relative mx-auto my-10 flex max-w-7xl flex-col items-center justify-center">
+      
+      <div className="absolute inset-y-0 left-0 h-full w-px bg-neutral-200/80 dark:bg-neutral-800/80">
+        <div className="absolute top-0 h-40 w-px bg-gradient-to-b from-transparent via-blue-500 to-transparent" />
+      </div>
+      <div className="absolute inset-y-0 right-0 h-full w-px bg-neutral-200/80 dark:bg-neutral-800/80">
+        <div className="absolute h-40 w-px bg-gradient-to-b from-transparent via-blue-500 to-transparent" />
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-px w-full bg-neutral-200/80 dark:bg-neutral-800/80">
+        <div className="absolute mx-auto h-px w-40 bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+      </div>
+      <div className="px-4 py-10 md:py-20">
+        <h1 className="relative z-10 mx-auto max-w-4xl text-center text-2xl font-bold text-slate-700 md:text-4xl lg:text-7xl dark:text-slate-300">
+          {"Launch your website in hours, not days"
+            .split(" ")
+            .map((word, index) => (
+              <motion.span
+                key={index}
+                initial={{ opacity: 0, filter: "blur(4px)", y: 10 }}
+                animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: index * 0.1,
+                  ease: "easeInOut",
+                }}
+                className="mr-2 inline-block"
+              >
+                {word}
+              </motion.span>
+            ))}
         </h1>
-        <p className="text-gray-300 mb-8 max-w-xl">
-          Create stunning visuals in seconds with our advanced AI technology. 
-          No design skills required.
-        </p>
-        
-        <div className="flex gap-4">
-          <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition">
-            Try for free
+        <motion.p
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          transition={{
+            duration: 0.3,
+            delay: 0.8,
+          }}
+          className="relative z-10 mx-auto max-w-xl py-4 text-center text-lg font-normal text-neutral-600 dark:text-neutral-400"
+        >
+          With AI, you can launch your website in hours, not days. Try our best
+          in class, state of the art, cutting edge AI tools to get your website
+          up.
+        </motion.p>
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          transition={{
+            duration: 0.3,
+            delay: 1,
+          }}
+          className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-4"
+        >
+          <button className="w-60 transform rounded-lg bg-black px-6 py-2 font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+            Explore Now
           </button>
-          <button className="px-6 py-3 rounded-md border border-blue-900 text-white hover:bg-blue-900/30 transition">
-            View gallery
+          <button className="w-60 transform rounded-lg border border-gray-300 bg-white px-6 py-2 font-medium text-black transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-100 dark:border-gray-700 dark:bg-black dark:text-white dark:hover:bg-gray-900">
+            Contact Support
           </button>
-        </div>
-      </main>
-      
-      {/* Feature Cards */}
-      <section className="relative z-10 max-w-6xl mx-auto mt-24 px-6">
-        <h3 className="text-white text-2xl font-bold text-center mb-12">Create amazing images with powerful AI</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1 */}
-          <div className="bg-blue-900/10 border border-blue-900/40 rounded-xl p-6 backdrop-blur-sm">
-            <div className="w-12 h-12 bg-blue-900/40 rounded-lg flex items-center justify-center mb-4">
-              <Image className="text-blue-500" size={24} />
-            </div>
-            <h4 className="text-white text-xl font-medium mb-2">Multiple Styles</h4>
-            <p className="text-gray-400">
-              Choose from dozens of artistic styles or create your own unique look with custom parameters.
-            </p>
+        </motion.div>
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 10,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.3,
+            delay: 1.2,
+          }}
+          className="relative z-10 mt-20 rounded-3xl border border-neutral-200 bg-neutral-100 p-4 shadow-md dark:border-neutral-800 dark:bg-neutral-900"
+        >
+          <div className="w-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700">
+            <img
+              src="https://assets.aceternity.com/pro/aceternity-landing.webp"
+              alt="Landing page preview"
+              className="aspect-[16/9] h-auto w-full object-cover"
+              height={1000}
+              width={1000}
+            />
           </div>
-          
-          {/* Card 2 */}
-          <div className="bg-blue-900/10 border border-blue-900/40 rounded-xl p-6 backdrop-blur-sm">
-            <div className="w-12 h-12 bg-blue-900/40 rounded-lg flex items-center justify-center mb-4">
-              <Clock className="text-blue-500" size={24} />
-            </div>
-            <h4 className="text-white text-xl font-medium mb-2">Lightning Fast</h4>
-            <p className="text-gray-400">
-              Generate high-quality images in seconds with our optimized AI processing pipeline.
-            </p>
-          </div>
-          
-          {/* Card 3 */}
-          <div className="bg-blue-900/10 border border-blue-900/40 rounded-xl p-6 backdrop-blur-sm">
-            <div className="w-12 h-12 bg-blue-900/40 rounded-lg flex items-center justify-center mb-4">
-              <Award className="text-blue-500" size={24} />
-            </div>
-            <h4 className="text-white text-xl font-medium mb-2">Premium Quality</h4>
-            <p className="text-gray-400">
-              Enjoy high-resolution outputs perfect for social media, marketing, or personal projects.
-            </p>
-          </div>
-        </div>
-      </section>
-      
-      {/* How It Works */}
-      <section className="relative z-10 max-w-6xl mx-auto mt-24 px-6">
-        <h3 className="text-white text-2xl font-bold text-center mb-12">How It Works</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center mb-4 mx-auto">
-              <span className="text-blue-500 font-bold">1</span>
-            </div>
-            <h4 className="text-white text-lg font-medium mb-2">Describe</h4>
-            <p className="text-gray-400 text-sm">
-              Enter a detailed description of what you want to create
-            </p>
-          </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center mb-4 mx-auto">
-              <span className="text-blue-500 font-bold">2</span>
-            </div>
-            <h4 className="text-white text-lg font-medium mb-2">Customize</h4>
-            <p className="text-gray-400 text-sm">
-              Select style, ratio, and other parameters
-            </p>
-          </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center mb-4 mx-auto">
-              <span className="text-blue-500 font-bold">3</span>
-            </div>
-            <h4 className="text-white text-lg font-medium mb-2">Generate</h4>
-            <p className="text-gray-400 text-sm">
-              Our AI creates multiple variations based on your input
-            </p>
-          </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center mb-4 mx-auto">
-              <span className="text-blue-500 font-bold">4</span>
-            </div>
-            <h4 className="text-white text-lg font-medium mb-2">Download</h4>
-            <p className="text-gray-400 text-sm">
-              Save your favorites in high resolution
-            </p>
-          </div>
-        </div>
-      </section>
-      
-      {/* Example Showcase */}
-      <section className="relative z-10 max-w-6xl mx-auto mt-24 px-6 mb-24">
-        <div className="bg-blue-900/10 border border-blue-900/40 rounded-xl p-8 backdrop-blur-sm">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <div>
-              <h3 className="text-white text-2xl font-bold mb-2">See what others are creating</h3>
-              <p className="text-gray-400 mb-4 md:mb-0">
-                Join thousands of creators making amazing AI-generated images
-              </p>
-            </div>
-            <button className="flex items-center text-blue-500 hover:text-blue-400 transition">
-              Explore gallery <ArrowRight size={16} className="ml-2" />
-            </button>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="aspect-square bg-blue-900/20 rounded-lg overflow-hidden"></div>
-            <div className="aspect-square bg-blue-900/20 rounded-lg overflow-hidden"></div>
-            <div className="aspect-square bg-blue-900/20 rounded-lg overflow-hidden"></div>
-            <div className="aspect-square bg-blue-900/20 rounded-lg overflow-hidden"></div>
-          </div>
-        </div>
-      </section>
-      
-      {/* CTA Section */}
-      <section className="relative z-10 max-w-4xl mx-auto mt-12 px-6 mb-24 text-center">
-        <h2 className="text-white text-3xl md:text-4xl font-bold mb-6">
-          Ready to create amazing images?
-        </h2>
-        <p className="text-gray-300 mb-8 max-w-xl mx-auto">
-          Join thousands of creators and start generating stunning AI images today.
-          No credit card required to get started.
-        </p>
-        
-        <div className="flex flex-col md:flex-row gap-4 justify-center">
-          <button className="px-8 py-3 rounded-md bg-blue-500 text-white font-medium hover:bg-blue-600 transition">
-            Start creating for free
-          </button>
-          <button className="px-8 py-3 rounded-md border border-blue-900 text-white hover:bg-blue-900/30 transition">
-            Learn more
-          </button>
-        </div>
-      </section>
-      
-      <BackgroundBeams />
+        </motion.div>
+      </div>
     </div>
   );
 }
+
+ 

@@ -27,45 +27,60 @@ export default function RegisterPage() {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
       
-      console.log("Submitting registration to:", `${apiUrl}/api/auth/register-user`);
+      console.log("Submitting login to:", `${apiUrl}/api/auth/register-user`);
       
-      const response = await axios.post(`${apiUrl}/api/auth/register-user`, {
+      const response = await axios.post("http://localhost:4000/api/auth/register-user", {
         email,
         password,
         username
       });
       
-      console.log('Registration response:', response.data);
+      console.log('Login response:', response.data);
       
       if (response.data) {
-        // Store user data in local storage
+        
+        const userEmail = response.data.email || response.data.user?.email || email;
+        
         if (typeof window !== 'undefined') {
-          localStorage.setItem('userEmail', email);
-          localStorage.setItem('userName', username);
-          // Store the entire response data or specific parts
-          localStorage.setItem('userData', JSON.stringify(response.data));
+          
+          localStorage.setItem('userEmail', userEmail);
+          
+          
+          const metadata = {
+            name: response.data.metadata?.name || response.data.name,
+            email: response.data.metadata?.email || userEmail,
+            credits: response.data.metadata?.credit || response.data.credit,
+            userId: response.data.metadata?.userId || response.data.userId,
+             
+          };
+          
+         
+          localStorage.setItem('userName', metadata.name);
+          localStorage.setItem('userCredits', metadata.credits);
+          localStorage.setItem('userId', metadata.userId);
+          
+          
+          localStorage.setItem('userMetadata', JSON.stringify(metadata));
         }
         
         setSuccess(true);
         
-        // Redirect after a brief delay
-        setTimeout(() => router.push('/model'), 1500);
+        setTimeout(() => router.push('/model'), 1200);
       } else {
         throw new Error('Empty response from server');
       }
     } catch (err) {
-      console.error("Registration error:", err);
+      console.error("Login error:", err);
       const axiosError = err as AxiosError<ApiError>;
       setError(
         axiosError.response?.data?.message || 
         axiosError.message || 
-        'An error occurred during registration'
+        'An error occurred during login'
       );
     } finally {
       setLoading(false);
     }
-  };
-
+  }
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-black relative overflow-hidden shadow-2xl">
       {/* Colorful blobs with blur effect in dark theme */}

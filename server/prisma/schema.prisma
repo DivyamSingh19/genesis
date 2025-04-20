@@ -22,6 +22,7 @@ model User {
   credit   Int @default(50)
   membership Membership?
   chat     Chat?
+  prompt   Prompt?
 }
 model UserProfile{
   id String @id @default(uuid()) 
@@ -40,7 +41,21 @@ model Chat {
 }
 
 model Membership {
-  id String @id @default(uuid())
+  id         String     @id @default(uuid())
+  type       String      
+  expiryDate DateTime
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  userId     String     @unique
+  user       User       @relation(fields: [userId], references: [id])
+}
+
+model Prompt{
+  id   String @id @default(uuid())
+  text  String
   userId String @unique
-  user  User @relation(fields: [userId], references: [id])
+  user  User   @relation(fields: [userId],references: [id])
+  createdAt  DateTime @default(now())
+  imageUrl   String
+  modelResponse String
 }
