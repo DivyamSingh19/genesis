@@ -13,7 +13,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   useEffect(() => {
      
     try {
-      const email = localStorage.getItem('email')
+      const email = localStorage.getItem('userEmail')
       
       if (!email) {
          

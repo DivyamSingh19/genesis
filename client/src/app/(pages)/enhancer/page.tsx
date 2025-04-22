@@ -12,6 +12,7 @@ import {
   X
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface Message {
   type: "user" | "bot" | "error";
@@ -29,6 +30,10 @@ export default function ImageEnhancerPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  // Flask API base URL - update this to match your Flask server address
+  const API_BASE_URL = "http://127.0.0.1:5002";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -85,7 +90,7 @@ export default function ImageEnhancerPage() {
       formData.append("prompt", currentPrompt);
       formData.append("membership_type", "basic");
       
-      const response = await fetch("http://127.0.0.1:5000/enhance/", {
+      const response = await fetch(`${API_BASE_URL}/enhance/`, {
         method: "POST",
         body: formData,
       });
@@ -98,10 +103,12 @@ export default function ImageEnhancerPage() {
       
       if (data.enhanced_image_url) {
          
+        const fullImageUrl = `${API_BASE_URL}${data.enhanced_image_url}`;
+         
         const botMessage: Message = {
           type: "bot",
           content: currentPrompt,
-          imageUrl: data.enhanced_image_url
+          imageUrl: fullImageUrl
         };
         setMessages(prev => [...prev, botMessage]);
         
@@ -132,6 +139,10 @@ export default function ImageEnhancerPage() {
     }
   };
 
+  const handleHomeClick = () => {
+    router.push("/");
+  };
+
   const resetToHome = () => {
     setMessages([]);
     setPrompt("");
@@ -140,14 +151,14 @@ export default function ImageEnhancerPage() {
   };
 
   return (
-    <div className="bg-black h-screen flex">
+    <div className="bg-gradient-to-br from-black to-zinc-900 min-h-screen flex">
       {/* Sidebar */}
-      <div className={`bg-zinc-950 border-r border-zinc-900 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0 md:w-16'} flex flex-col overflow-hidden`}>
+      <div className={`bg-black/40 border-r border-blue-900/20 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0 md:w-16'} flex flex-col overflow-hidden`}>
         <div 
-          className="p-4 flex items-center cursor-pointer hover:bg-zinc-900 transition-colors"
+          className="p-4 flex items-center cursor-pointer hover:bg-black/30 transition-colors"
           onClick={resetToHome}
         >
-          <div className="h-8 w-8 text-emerald-400 mr-3">
+          <div className="h-8 w-8 text-blue-400 mr-3">
             <svg
               viewBox="0 0 24 24"
               className="w-full h-full"
@@ -177,23 +188,23 @@ export default function ImageEnhancerPage() {
               />
             </svg>
           </div>
-          {sidebarOpen && <span className="font-bold text-lg text-gray-300">Genesis</span>}
+          {sidebarOpen && <button onClick={handleHomeClick} className="font-bold text-lg text-gray-200">Genesis</button>}
         </div>
       </div>
       
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header with Toggle Button */}
-        <div className="md:hidden bg-zinc-950 border-b border-zinc-900 p-3 flex items-center">
+        <div className="md:hidden bg-black/60 border-b border-blue-900/20 p-3 flex items-center">
           <Button 
             variant="ghost" 
             size="icon" 
-            className="mr-2 text-gray-400 hover:bg-zinc-900 hover:text-gray-300"
+            className="mr-2 text-gray-400 hover:bg-black/40 hover:text-blue-300"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
             {sidebarOpen ? <X className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
           </Button>
-          <div className="h-6 w-6 text-emerald-400 mr-2">
+          <div className="h-6 w-6 text-blue-400 mr-2">
             <svg
               viewBox="0 0 24 24"
               className="w-full h-full"
@@ -233,7 +244,7 @@ export default function ImageEnhancerPage() {
               <div className="h-16 w-16 mb-3">
                 <svg
                   viewBox="0 0 24 24"
-                  className="text-emerald-400 w-full h-full"
+                  className="text-blue-400 w-full h-full"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -260,14 +271,14 @@ export default function ImageEnhancerPage() {
                   />
                 </svg>
               </div>
-              <h1 className="text-3xl font-bold text-gray-300 mb-3">Image Enhancer</h1>
-              <p className="text-gray-400 max-w-md mb-6">Upload an image and provide instructions to enhance it</p>
+              <h1 className="text-5xl font-bold text-white mb-3">Image Enhancer</h1>
+              <p className="text-blue-200 max-w-md mb-8 text-lg">Upload an image and provide instructions to enhance it</p>
               
               {/* File Upload Area */}
-              <div className="w-full max-w-xl mb-6">
+              <div className="w-full max-w-xl mb-8">
                 <div 
                   className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-colors
-                    ${previewUrl ? 'border-emerald-600 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-500 bg-zinc-900'}
+                    ${previewUrl ? 'border-blue-600 bg-black/40' : 'border-blue-900/50 hover:border-blue-500 bg-black/30'}
                   `}
                   onClick={triggerFileInput}
                 >
@@ -281,7 +292,7 @@ export default function ImageEnhancerPage() {
                   
                   {previewUrl ? (
                     <div className="relative w-full max-w-sm aspect-auto">
-                      <div className="relative rounded-lg overflow-hidden bg-zinc-800 aspect-[4/3] w-full">
+                      <div className="relative rounded-lg overflow-hidden bg-black/40 aspect-[4/3] w-full">
                         <Image
                           src={previewUrl}
                           alt="Preview"
@@ -291,7 +302,7 @@ export default function ImageEnhancerPage() {
                         />
                       </div>
                       <button
-                        className="absolute -top-2 -right-2 bg-zinc-800 rounded-full p-1 text-gray-400 hover:text-gray-200"
+                        className="absolute -top-2 -right-2 bg-black rounded-full p-1 text-blue-400 hover:text-blue-200"
                         onClick={(e) => {
                           e.stopPropagation();
                           clearSelectedFile();
@@ -302,9 +313,9 @@ export default function ImageEnhancerPage() {
                     </div>
                   ) : (
                     <>
-                      <ImageIcon className="h-12 w-12 text-zinc-600 mb-2" />
-                      <p className="text-gray-400 mb-1">Click to upload an image</p>
-                      <p className="text-xs text-gray-500">JPG, PNG, WEBP supported</p>
+                      <ImageIcon className="h-12 w-12 text-blue-500/50 mb-2" />
+                      <p className="text-blue-200 mb-1">Click to upload an image</p>
+                      <p className="text-xs text-blue-300/50">JPG, PNG, WEBP supported</p>
                     </>
                   )}
                 </div>
@@ -312,7 +323,7 @@ export default function ImageEnhancerPage() {
 
               <div className="relative w-full max-w-xl">
                 <Input
-                  className="py-5 pr-20 text-base bg-zinc-900 border-zinc-800 text-gray-300 placeholder-gray-500 rounded-xl"
+                  className="py-5 pr-20 text-base bg-black/30 border-blue-900/30 text-blue-100 placeholder-blue-300/50 rounded-xl"
                   placeholder="Enter your enhancement instructions..."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
@@ -322,7 +333,7 @@ export default function ImageEnhancerPage() {
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
                   <Button
                     size="icon"
-                    className="h-8 w-8 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-zinc-700"
+                    className="h-8 w-8 rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-950/50"
                     onClick={enhanceImage}
                     disabled={loading || !prompt.trim() || !selectedFile}
                   >
@@ -336,7 +347,7 @@ export default function ImageEnhancerPage() {
               </div>
               
               {error && (
-                <div className="mt-4 text-gray-400 text-xs bg-red-900/30 p-2 rounded-lg">
+                <div className="mt-4 text-blue-200 text-xs bg-red-900/30 p-2 rounded-lg">
                   {error}
                 </div>
               )}
@@ -351,16 +362,16 @@ export default function ImageEnhancerPage() {
                   <div 
                     className={`max-w-[90%] rounded-xl p-3 ${
                       message.type === "user" 
-                        ? "bg-gray-700 text-gray-200" 
+                        ? "bg-blue-800/40 text-blue-100" 
                         : message.type === "error" 
-                        ? "bg-gray-800 text-gray-300 border border-gray-700" 
-                        : "bg-gray-800 text-gray-300"
+                        ? "bg-black/50 text-blue-200 border border-red-800/30" 
+                        : "bg-black/40 text-blue-100"
                     }`}
                   >
                     <p className="mb-2">{message.content}</p>
                     
                     {message.originalImageUrl && (
-                      <div className="relative rounded-lg overflow-hidden bg-zinc-900 aspect-[4/3] w-64 md:w-80 mb-2">
+                      <div className="relative rounded-lg overflow-hidden bg-black/30 aspect-[4/3] w-64 md:w-80 mb-2">
                         <Image
                           src={message.originalImageUrl}
                           alt="Original image"
@@ -372,7 +383,7 @@ export default function ImageEnhancerPage() {
                     )}
                     
                     {message.imageUrl && (
-                      <div className="relative rounded-lg overflow-hidden bg-zinc-900 aspect-[4/3] w-64 md:w-80">
+                      <div className="relative rounded-lg overflow-hidden bg-black/30 aspect-[4/3] w-64 md:w-80">
                         <Image
                           src={message.imageUrl}
                           alt="Enhanced image"
@@ -392,7 +403,7 @@ export default function ImageEnhancerPage() {
                 <div className="w-full max-w-xl flex space-x-4">
                   <div 
                     className={`flex-shrink-0 w-24 h-24 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors
-                      ${previewUrl ? 'border-emerald-600 bg-zinc-900' : 'border-zinc-700 hover:border-zinc-500 bg-zinc-900'}
+                      ${previewUrl ? 'border-blue-600 bg-black/40' : 'border-blue-900/50 hover:border-blue-500 bg-black/30'}
                     `}
                     onClick={triggerFileInput}
                   >
@@ -406,7 +417,7 @@ export default function ImageEnhancerPage() {
                     
                     {previewUrl ? (
                       <div className="relative w-full h-full">
-                        <div className="relative rounded-lg overflow-hidden bg-zinc-800 w-full h-full">
+                        <div className="relative rounded-lg overflow-hidden bg-black/40 w-full h-full">
                           <Image
                             src={previewUrl}
                             alt="Preview"
@@ -416,7 +427,7 @@ export default function ImageEnhancerPage() {
                           />
                         </div>
                         <button
-                          className="absolute -top-2 -right-2 bg-zinc-800 rounded-full p-1 text-gray-400 hover:text-gray-200"
+                          className="absolute -top-2 -right-2 bg-black rounded-full p-1 text-blue-400 hover:text-blue-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             clearSelectedFile();
@@ -426,13 +437,13 @@ export default function ImageEnhancerPage() {
                         </button>
                       </div>
                     ) : (
-                      <ImageIcon className="h-8 w-8 text-zinc-600" />
+                      <ImageIcon className="h-8 w-8 text-blue-500/50" />
                     )}
                   </div>
                   
                   <div className="flex-1 relative">
                     <Input
-                      className="py-5 pr-20 text-base bg-zinc-900 border-zinc-800 text-gray-300 placeholder-gray-500 rounded-xl h-24"
+                      className="py-5 pr-20 text-base bg-black/30 border-blue-900/30 text-blue-100 placeholder-blue-300/50 rounded-xl h-24"
                       placeholder="Enter your enhancement instructions..."
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
@@ -442,7 +453,7 @@ export default function ImageEnhancerPage() {
                     <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
                       <Button
                         size="icon"
-                        className="h-8 w-8 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-zinc-700"
+                        className="h-8 w-8 rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-950/50"
                         onClick={enhanceImage}
                         disabled={loading || !prompt.trim() || !selectedFile}
                       >
@@ -458,7 +469,7 @@ export default function ImageEnhancerPage() {
               </div>
               
               {error && !messages.some(m => m.type === "error") && (
-                <div className="mt-2 ml-2 text-gray-400 text-xs bg-red-900/30 p-2 rounded-lg">
+                <div className="mt-2 ml-2 text-blue-200 text-xs bg-red-900/30 p-2 rounded-lg">
                   {error}
                 </div>
               )}

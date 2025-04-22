@@ -83,7 +83,7 @@ async function loginUser(req:Request,res:Response) {
             const metadata = {
                 name:user.username,
                 email,
-                credits : user.credit,
+                credit : user.credit,
                 userId :user.id
             }
              res.status(200).json({

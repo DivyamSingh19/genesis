@@ -11,10 +11,12 @@ import {
   Code,
   FileText,
   Menu,
-  X
+  X,
+  Download
 } from "lucide-react";
 import Image from "next/image";
 import localImage from "./image.png";
+import AuthLayout from "@/layout/AuthLayout";
 
 interface Message {
   type: "user" | "bot" | "error";
@@ -137,16 +139,54 @@ export default function HomePage() {
     setError(null);
   };
 
-  return (
-    <div className="bg-black h-screen flex">
+  // Function to handle image download
+  const handleImageDownload = async (imageUrl: string) => {
+    try {
+      // Fetch the image
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
       
-      <div className={`bg-zinc-950 border-r border-zinc-900 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0 md:w-16'} flex flex-col overflow-hidden`}>
+      // Create a temporary anchor element
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      
+      // Set the file name (extract from URL or use a default)
+      const fileName = imageUrl.split('/').pop() || `genesis-image-${Date.now()}.png`;
+      downloadLink.download = fileName;
+      
+      // Append to the DOM, trigger click, and clean up
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      
+      // Clean up the object URL
+      URL.revokeObjectURL(downloadLink.href);
+    } catch (err) {
+      console.error("Error downloading image:", err);
+      setError("Failed to download image");
+    }
+  };
+
+  return (
+    <div> 
+      <AuthLayout> 
+    <div className="bg-black min-h-screen h-screen flex relative overflow-hidden">
+      {/* Subtle gradient background with blur effects */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute w-96 h-96 bg-purple-700/10 rounded-full -top-48 -left-48 blur-3xl"></div>
+        <div className="absolute w-96 h-96 bg-blue-600/10 rounded-full top-1/4 right-1/3 transform -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+        <div className="absolute w-80 h-80 bg-indigo-600/10 rounded-full bottom-1/4 left-1/3 transform translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+        <div className="absolute w-96 h-96 bg-indigo-500/10 rounded-full -bottom-48 -right-48 blur-3xl"></div>
+      </div>
+      
+      {/* Sidebar */}
+      <div className={`bg-black backdrop-blur-md border-r border-zinc-800/70 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0 md:w-16'} flex flex-col overflow-hidden relative z-10`}>
         
         <div 
-          className="p-4 flex items-center cursor-pointer hover:bg-zinc-900 transition-colors"
+          className="p-4 flex items-center cursor-pointer hover:bg-zinc-800/70 transition-colors"
           onClick={resetToHome}
         >
-          <div className="h-8 w-8 text-emerald-400 mr-3">
+          <div className="h-8 w-8 text-indigo-400 mr-3">
             <svg
               viewBox="0 0 24 24"
               className="w-full h-full"
@@ -176,25 +216,23 @@ export default function HomePage() {
               />
             </svg>
           </div>
-          {sidebarOpen && <span className="font-bold text-lg text-gray-300">Genesis</span>}
+          {sidebarOpen && <span className="font-bold text-lg text-gray-200">Genesis</span>}
         </div>
-        
-         
       </div>
       
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden relative z-10">
         {/* Mobile Header with Toggle Button */}
-        <div className="md:hidden bg-zinc-950 border-b border-zinc-900 p-3 flex items-center">
+        <div className="md:hidden bg-zinc-900/70 backdrop-blur-md border-b border-zinc-800/70 p-3 flex items-center">
           <Button 
             variant="ghost" 
             size="icon" 
-            className="mr-2 text-gray-400 hover:bg-zinc-900 hover:text-gray-300"
+            className="mr-2 text-gray-400 hover:bg-zinc-800/70 hover:text-gray-200"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-          <div className="h-6 w-6 text-emerald-400 mr-2">
+          <div className="h-6 w-6 text-indigo-400 mr-2">
             <svg
               viewBox="0 0 24 24"
               className="w-full h-full"
@@ -224,17 +262,17 @@ export default function HomePage() {
               />
             </svg>
           </div>
-          <span className="font-bold text-gray-300">Genesis</span>
+          <span className="font-bold text-gray-200">Genesis</span>
         </div>
 
-        {/* Chat Messages Area - Added top padding and reduced bottom padding */}
-        <div className="flex-1 overflow-y-auto p-3 pt-8 flex flex-col space-y-2">
+        {/* Chat Messages Area */}
+        <div className="flex-1 overflow-y-auto p-4 pt-8 flex flex-col space-y-3">
           {messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center pt-10">
-              <div className="h-16 w-16 mb-3">
+              <div className="h-16 w-16 mb-4">
                 <svg
                   viewBox="0 0 24 24"
-                  className="text-emerald-400 w-full h-full"
+                  className="text-indigo-400 w-full h-full"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -261,33 +299,26 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h1 className="text-3xl font-bold text-gray-300 mb-3">Genesis</h1>
-              <p className="text-gray-400 max-w-md mb-6">Spark of genius? Let's shape it!</p>
+              <h1 className="text-3xl font-bold text-gray-200 mb-3">Genesis</h1>
+              <p className="text-gray-400 max-w-md mb-8">Transform your ideas into beautiful digital experiences</p>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full max-w-xl">
-                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-3 hover:border-zinc-700 transition-all">
-                  <div className="font-medium mb-1 text-gray-300">Image Creation</div>
-                  <div className="text-xs text-gray-400">Generate stunning visuals</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-xl">
+                <div className="bg-zinc-900/70 backdrop-blur-sm border border-zinc-800/50 rounded-xl p-4 hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                  <ImageIcon className="h-5 w-5 text-indigo-400 mb-2" />
+                  <div className="font-medium mb-1 text-gray-200">Image Creation</div>
+                  <div className="text-xs text-gray-400">Generate stunning visuals instantly</div>
                 </div>
 
-                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-3 hover:border-zinc-700 transition-all flex">
-                  <div className="flex-1 text-xs">
-                    <div className="font-medium text-gray-300">Code Generation</div>
-                    <div className="text-gray-400">Create functional code</div>
-                  </div>
-                  <div className="h-8 w-8 bg-gray-800 rounded-lg ml-2 flex items-center justify-center">
-                    <div className="h-5 w-5 border-t-2 border-r-2 border-gray-500"></div>
-                  </div>
+                <div className="bg-zinc-900/70 backdrop-blur-sm border border-zinc-800/50 rounded-xl p-4 hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                  <Code className="h-5 w-5 text-indigo-400 mb-2" />
+                  <div className="font-medium mb-1 text-gray-200">Code Generation</div>
+                  <div className="text-xs text-gray-400">Create functional code snippets</div>
                 </div>
 
-                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-3 hover:border-zinc-700 transition-all flex">
-                  <div className="flex-1 text-xs">
-                    <div className="font-medium text-gray-300">Content Writer</div>
-                    <div className="text-gray-400">Draft professional text</div>
-                  </div>
-                  <div className="h-8 w-8 bg-gray-800 rounded-lg ml-2 flex items-center justify-center">
-                    <div className="h-5 w-5 border-b-2 border-l-2 border-gray-500"></div>
-                  </div>
+                <div className="bg-zinc-900/70 backdrop-blur-sm border border-zinc-800/50 rounded-xl p-4 hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                  <FileText className="h-5 w-5 text-indigo-400 mb-2" />
+                  <div className="font-medium mb-1 text-gray-200">Content Writer</div>
+                  <div className="text-xs text-gray-400">Draft professional content</div>
                 </div>
               </div>
             </div>
@@ -295,21 +326,21 @@ export default function HomePage() {
             messages.map((message, index) => (
               <div 
                 key={index} 
-                className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex ${message.type === "user" ? "justify-end" : "justify-start"} animate-fadeIn`}
               >
                 <div 
-                  className={`max-w-[90%] rounded-xl p-3 ${
+                  className={`max-w-[90%] rounded-xl p-4 shadow-md ${
                     message.type === "user" 
-                      ? "bg-gray-700 text-gray-200" 
+                      ? "bg-indigo-600/90 text-gray-100" 
                       : message.type === "error" 
-                      ? "bg-gray-800 text-gray-300 border border-gray-700" 
-                      : "bg-gray-800 text-gray-300"
+                      ? "bg-zinc-900/80 text-gray-200 border border-red-800/50" 
+                      : "bg-zinc-900/80 text-gray-200 border border-zinc-800/50"
                   }`}
                 >
-                  <p className="mb-2">{message.content}</p>
+                  <p className="mb-3">{message.content}</p>
                   
                   {message.imageUrl && (
-                    <div className="relative rounded-lg overflow-hidden bg-zinc-900 aspect-[4/3] w-64 md:w-80">
+                    <div className="relative rounded-lg overflow-hidden bg-zinc-800 aspect-[4/3] w-64 md:w-80 shadow-lg">
                       <Image
                         src={message.imageUrl}
                         alt="AI generated image"
@@ -318,6 +349,16 @@ export default function HomePage() {
                         className="object-cover"
                         quality={100}
                       />
+                      
+                      {/* Download button */}
+                      <Button
+                        size="icon"
+                        className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full h-8 w-8 shadow-lg transition-colors duration-200"
+                        onClick={() => handleImageDownload(message.imageUrl as string)}
+                        title="Download image"
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -326,12 +367,12 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Input Area - Fixed at bottom with added padding */}
-        <div className="p-3 pb-6 border-t border-zinc-900">
+        {/* Input Area */}
+        <div className="p-4 pb-6 border-t border-zinc-900/50 bg-zinc-900/30 backdrop-blur-md">
           <div className="max-w-4xl mx-auto">
             <div className="relative">
               <Input
-                className="pr-20 py-5 text-base bg-zinc-900 border-zinc-800 text-gray-300 placeholder-gray-500 rounded-xl"
+                className="pr-20 py-6 text-base bg-zinc-800/80 border-zinc-700/50 text-gray-200 placeholder-gray-500 rounded-xl shadow-lg focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
                 placeholder="Generate anything..."
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -341,14 +382,14 @@ export default function HomePage() {
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 text-gray-400 hover:bg-zinc-800 hover:text-gray-300"
+                  className="h-8 w-8 text-gray-400 hover:bg-zinc-700/50 hover:text-gray-200"
                 >
                   <Paperclip className="h-4 w-4" />
                 </Button>
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
+                  className="h-9 w-9 rounded-full bg-indigo-600 text-white hover:bg-indigo-500 shadow-md"
                   onClick={generateImage}
                   disabled={loading || !prompt.trim()}
                 >
@@ -366,6 +407,8 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+    </div>
+    </AuthLayout>
     </div>
   );
 }

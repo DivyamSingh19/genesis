@@ -9,20 +9,27 @@ import {
 } from "@/components/ui/AnimatedModal";
 
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 
 export function GenesisPremiumButton() {
-   
+  const router = useRouter(); 
   const images = [
-    "/api/placeholder/500/500",
-    "/api/placeholder/500/500",
-    "/api/placeholder/500/500",
-    "/api/placeholder/500/500",
-    "/api/placeholder/500/500",
+    "/image1.png",
+    "/image2.png",
+    "/image3.png",
+    "/image4.png",
+    "/image1.png"
   ];
+  const handleStartClick = () => {
+    router.push("/");
+  };
+  const handlePremiumClick = () =>{
+    router.push("/premium")
+  }
   
   return (
     <Modal>
-      <ModalTrigger className="bg-black text-white flex justify-center group/modal-btn relative overflow-hidden rounded-3xl px-6 py-3 font-medium shadow-lg transition-all duration-300">
+      <ModalTrigger className="bg-black text-white flex justify-center group/modal-btn relative overflow-hidden rounded-3xl px-6 py-3 font-medium shadow-lg border border-white transition-all duration-300">
         <span className="group-hover/modal-btn:translate-x-40 text-center transition duration-500">
           Get Genesis Pro
         </span>
@@ -108,10 +115,10 @@ export function GenesisPremiumButton() {
           </div>
         </ModalContent>
         <ModalFooter className="gap-4 bg-black border-t border-gray-800">
-          <button className="px-4 py-2 bg-gray-900 text-gray-300 border border-gray-800 rounded-xl text-sm w-32 hover:bg-gray-800 transition-colors">
+          <button onClick={handleStartClick} className="px-4 py-2 bg-gray-900 text-gray-300 border border-gray-800 rounded-xl text-sm w-32 hover:bg-gray-800 transition-colors">
             Maybe Later
           </button>
-          <button className="bg-gray-100 text-black text-sm px-4 py-2 rounded-xl border border-gray-300 w-32 hover:bg-white transition-colors shadow-lg">
+          <button onClick={handlePremiumClick}className="bg-gray-100 text-black text-sm px-4 py-2 rounded-xl border border-gray-300 w-32 hover:bg-white transition-colors shadow-lg">
             Upgrade Now
           </button>
         </ModalFooter>

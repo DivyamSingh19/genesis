@@ -36,13 +36,10 @@ export default function LoginPage() {
       console.log('Login response:', response.data);
       
       if (response.data) {
-        
         const userEmail = response.data.email || response.data.user?.email || email;
         
         if (typeof window !== 'undefined') {
-          
           localStorage.setItem('userEmail', userEmail);
-          
           
           const metadata = {
             name: response.data.metadata?.name || response.data.name,
@@ -51,17 +48,13 @@ export default function LoginPage() {
             userId: response.data.metadata?.userId || response.data.userId
           };
           
-         
           localStorage.setItem('userName', metadata.name);
           localStorage.setItem('userCredits', metadata.credit.toString());
           localStorage.setItem('userId', metadata.userId);
-          
-          
           localStorage.setItem('userMetadata', JSON.stringify(metadata));
         }
         
         setSuccess(true);
-        
         setTimeout(() => router.push('/model'), 1200);
       } else {
         throw new Error('Empty response from server');
@@ -78,46 +71,45 @@ export default function LoginPage() {
       setLoading(false);
     }
   }
+
   return (
-    <div className="min-h-screen w-full flex justify-center items-center bg-black relative overflow-hidden shadow-2xl">
-      {/* Colorful blobs with blur effect in dark theme */}
+    <div className="min-h-screen w-full flex justify-center items-center bg-black relative overflow-hidden">
+      {/* Gradient background with blur effects */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         {/* Top row blobs */}
-        <div className="absolute w-64 h-64 bg-yellow-400/30 rounded-full -top-20 -left-20 blur-2xl"></div>
-        <div className="absolute w-48 h-48 bg-purple-500/30 rounded-full -top-10 left-1/3 transform -translate-x-1/2 blur-2xl"></div>
-        <div className="absolute w-72 h-72 bg-green-500/30 rounded-full -top-24 -right-24 blur-2xl"></div>
+        <div className="absolute w-72 h-72 bg-purple-700/20 rounded-full -top-20 -left-20 blur-3xl"></div>
+        <div className="absolute w-56 h-56 bg-blue-600/20 rounded-full top-10 left-1/3 transform -translate-x-1/2 blur-3xl"></div>
+        <div className="absolute w-64 h-64 bg-indigo-500/20 rounded-full -top-24 right-1/4 blur-3xl"></div>
 
         {/* Middle row blobs */}
-        <div className="absolute w-56 h-56 bg-pink-500/30 rounded-full top-1/3 transform -translate-y-1/2 -left-20 blur-2xl"></div>
-        <div className="absolute w-32 h-32 bg-blue-500/30 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 blur-2xl"></div>
-        <div className="absolute w-44 h-44 bg-sky-500/30 rounded-full top-1/3 transform -translate-y-1/2 -right-16 blur-2xl"></div>
+        <div className="absolute w-80 h-80 bg-blue-500/20 rounded-full top-1/2 transform -translate-y-1/2 -left-32 blur-3xl"></div>
+        <div className="absolute w-96 h-96 bg-indigo-600/20 rounded-full top-1/2 right-1/4 transform -translate-y-1/2 blur-3xl"></div>
 
         {/* Bottom row blobs */}
-        <div className="absolute w-48 h-48 bg-orange-500/30 rounded-full -bottom-16 left-1/4 transform -translate-x-1/2 blur-2xl"></div>
-        <div className="absolute w-36 h-36 bg-purple-500/30 rounded-full -bottom-12 left-2/3 transform -translate-x-1/2 blur-2xl"></div>
-        <div className="absolute w-60 h-60 bg-sky-400/30 rounded-full -bottom-24 -right-20 blur-2xl"></div>
+        <div className="absolute w-72 h-72 bg-violet-600/20 rounded-full -bottom-20 left-1/4 transform -translate-x-1/2 blur-3xl"></div>
+        <div className="absolute w-80 h-80 bg-purple-500/20 rounded-full -bottom-24 -right-20 blur-3xl"></div>
       </div>
 
       <main className="relative z-10 w-full flex justify-center items-center p-4">
-        <div className="bg-gray-900 rounded-2xl p-8 md:p-10 w-full max-w-md shadow-2xl border border-gray-800 text-center backdrop-blur-sm bg-opacity-80">
-          <h1 className="text-2xl font-bold mb-2 text-white">GENESIS</h1>
-          <p className="text-sm text-gray-400 mb-6">Welcome back! Please sign in to continue</p>
+        <div className="bg-gray-900/80 rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-800/50 text-center backdrop-blur-md">
+          <h1 className="text-3xl font-bold mb-2 text-white tracking-wide">GENESIS</h1>
+          <p className="text-sm text-gray-400 mb-8">Welcome back! Please sign in to continue</p>
           
           {error && (
-            <div className="p-3 mb-4 bg-red-900/50 border border-red-800 rounded-lg text-red-200 text-sm">
+            <div className="p-3 mb-6 bg-red-900/40 border border-red-800/50 rounded-lg text-red-200 text-sm">
               {error}
             </div>
           )}
           
           {success && (
-            <div className="p-3 mb-4 bg-green-900/50 border border-green-800 rounded-lg text-green-200 text-sm">
+            <div className="p-3 mb-6 bg-green-900/40 border border-green-800/50 rounded-lg text-green-200 text-sm">
               Login successful!
             </div>
           )}
           
           <form onSubmit={handleSubmit} className="text-left">
             <div className="mb-6">
-              <label htmlFor="email" className="block mb-2 text-sm text-gray-300">
+              <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-300">
                 Email address
               </label>
               <input
@@ -126,12 +118,12 @@ export default function LoginPage() {
                 placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-3 bg-gray-800 border border-gray-700 rounded-full text-base focus:outline-none focus:border-indigo-500 text-white shadow-md"
+                className="w-full p-4 bg-gray-800/50 border border-gray-700/50 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-white shadow-md"
                 required
               />
             </div>
-            <div className="mb-6">
-              <label htmlFor="password" className="block mb-2 text-sm text-gray-300">
+            <div className="mb-8">
+              <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-300">
                 Password
               </label>
               <input
@@ -140,7 +132,7 @@ export default function LoginPage() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-3 bg-gray-800 border border-gray-700 rounded-full text-base focus:outline-none focus:border-indigo-500 text-white shadow-md"
+                className="w-full p-4 bg-gray-800/50 border border-gray-700/50 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-white shadow-md"
                 required
               />
             </div>
@@ -149,15 +141,15 @@ export default function LoginPage() {
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-1/2 py-3 bg-indigo-600 text-white rounded-full text-base font-medium hover:bg-indigo-700 transition-colors disabled:bg-indigo-800 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-indigo-600 text-white rounded-xl text-base font-medium hover:bg-indigo-500 transition-colors disabled:bg-indigo-800 disabled:cursor-not-allowed shadow-lg"
               >
                 {loading ? 'Loading...' : 'Continue'}
               </button>
             </div>
           </form>
           
-          <div className="mt-6 text-sm text-gray-400">
-            <p>No account? <Link href="/auth/register" className="text-indigo-400 font-medium hover:underline">Create one</Link></p>
+          <div className="mt-8 text-sm text-gray-400">
+            <p>No account? <Link href="/auth/register" className="text-indigo-400 font-medium hover:text-indigo-300 transition-colors">Create one</Link></p>
           </div>
         </div>
       </main>
