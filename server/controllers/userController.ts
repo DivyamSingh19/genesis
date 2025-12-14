@@ -1,12 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prisma";
 import express from "express"
 import { Request,Response } from "express";
 import dotenv from "dotenv"
 import bcrypt from "bcrypt"
 import { User } from "../types";
-import { createToken  } from "../utils/tokens";
+import createToken  from "../utils/tokens";
 dotenv.config()
-const prisma = new PrismaClient()
  
 async function registerUser(req:Request,res:Response) {
     try {

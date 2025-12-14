@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prisma";
 import { Request, Response } from "express";
 
-// Initialize Prisma client
-const prisma = new PrismaClient();
+
 
 // Interface for the prompt data structure
 interface PromptData {

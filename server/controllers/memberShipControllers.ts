@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prisma";
 import { Request, Response } from "express";
 
-const prisma = new PrismaClient();
+
 
 enum MembershipType {
   BASIC = "basic",
@@ -84,7 +84,7 @@ async function addMembership(req: Request, res: Response) {
         }
       });
     } else {
-      // Create new membership
+       
       const newMembership = await prisma.membership.create({
         data: {
           userId,
@@ -93,7 +93,7 @@ async function addMembership(req: Request, res: Response) {
         }
       });
 
-      // Update user's credits
+       
       const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: {
