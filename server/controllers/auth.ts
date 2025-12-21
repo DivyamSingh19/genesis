@@ -6,8 +6,8 @@ import bcrypt from "bcrypt"
 import { User } from "../types";
 import createToken  from "../utils/tokens";
 dotenv.config()
- 
-async function registerUser(req:Request,res:Response) {
+ //to be added => zod validation, 
+export const registerUser = async(req:Request,res:Response)=> {
     try {
         const {username,email,password} = req.body as User
         if(!username||!email||!password){
@@ -36,7 +36,7 @@ async function registerUser(req:Request,res:Response) {
         
         const metadata = {
             name : username,
-            email ,
+            email :email ,
             userId : newUser.id,
             credit : newUser.credit
         }
@@ -54,7 +54,7 @@ async function registerUser(req:Request,res:Response) {
         })
     }
 }
-async function loginUser(req:Request,res:Response) {
+export const loginUser= async(req:Request,res:Response) =>  {
     try {
         const {email,password} = req.body as User
         if(!email || !password){
@@ -105,4 +105,30 @@ async function loginUser(req:Request,res:Response) {
         })
     }
 }
-export {registerUser,loginUser}
+ 
+
+export const logoutUser = async (req:Request,res:Response) => {
+    try {
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success:false,
+            message:(error as Error).message
+        })
+    }
+}
+
+export const me = async (req:Request,res:Response) => {
+    try {
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success:false,
+            message:(error as Error).message
+        })
+    }
+}
+
+ 

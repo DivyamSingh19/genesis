@@ -1,9 +1,9 @@
 import express, { NextFunction } from "express"
 import { Request,Response } from "express"
-import { registerUser,loginUser } from "../controllers/userController"
+import { registerUser,loginUser } from "../controllers/auth"
 
 const userRouter = express.Router()
-
+//handle oauth, me
 
 userRouter.post("/register-user", async (req:Request,res:Response,next:NextFunction) => {
     try {
@@ -21,8 +21,14 @@ userRouter.post("/login-user",async (req:Request,res:Response,next:NextFunction)
     }
 })
 
-
-
-
+userRouter.get(
+    '/me', async (req:Request,res:Response,next:NextFunction) => {
+        try {
+            
+        } catch (error) {
+            next()
+        }
+    }
+)
 
 export default userRouter;

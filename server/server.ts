@@ -2,7 +2,7 @@ import express from "express"
 import { Request,Response } from "express";
 import cors from "cors"
 import connectCloudinary from "./config/cloudinary";
-import userRouter from "./routes/userRoutes";
+import userRouter from "./routes/auth";
 import dotenv from "dotenv"
 import memberShipRouter from "./routes/membershipRoute";
 import promptRouter from "./routes/inputRoute";
