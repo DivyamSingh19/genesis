@@ -12,7 +12,6 @@ export const forgotPassword = async (req:Request,res:Response) => {
         })
     }
 }
-
 //validate reset link => correct?=> token valid? => check if the password matches the required constraints, if it does => reset password
 export const resetPassword = async (req:Request,res:Response) => {
     try {
