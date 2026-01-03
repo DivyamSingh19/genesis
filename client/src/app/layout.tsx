@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {Manrope ,Space_Grotesk} from "next/font/google";
 import "./globals.css";
  
  
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manropeSans = Manrope({
+  variable: "--font-manrope-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const spaceGrotesk = Space_Grotesk({
+  variable:"--font-grotesk-sans",
+  subsets:["latin"]
+})
 
 export const metadata: Metadata = {
   title: "Genesis.ai",
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${manropeSans.variable} ${spaceGrotesk.variable} antialiased`}
       > 
          
         {children}

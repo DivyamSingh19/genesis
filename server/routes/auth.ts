@@ -3,7 +3,7 @@ import { Request,Response } from "express"
 import { registerUser,loginUser } from "../controllers/auth"
 
 const userRouter = express.Router()
-//handle oauth, me
+ 
 
 userRouter.post("/register-user", async (req:Request,res:Response,next:NextFunction) => {
     try {
@@ -30,5 +30,13 @@ userRouter.get(
         }
     }
 )
+
+userRouter.post("/logout",async (req:Request,res:Response,next:NextFunction) => {
+    try {
+        loginUser(req,res)
+    } catch (error) {
+        next()
+    }
+})
 
 export default userRouter;

@@ -71,7 +71,11 @@ export default {
   		backgroundImage: {
   			'grid-pattern': ' ',
   			'grid-pattern-light': ''
-  		}
+  		},
+		fontFamily:{
+			manrope:["var(--font-manrope-sans)"],
+			grotesk:["var(--font-grotesk-sans)"]
+		}
   	}
   },
   plugins: [require("tailwindcss-animate"),heroui()],

@@ -1,21 +1,21 @@
-import prisma from "../utils/prisma";
-import express from "express"
 import { Request,Response } from "express";
-import dotenv from "dotenv"
-import bcrypt from "bcrypt"
-import { User } from "../types";
-import createToken  from "../utils/tokens";
-dotenv.config()
- //to be added => zod validation, 
+import prisma from "../utils/prisma";
+import { createToken,hashPassword,validatePassword, } from "../utils/tokens";
+import { userLoginSchema,newUserSchema } from "../validation/auth";
+//implement cookies here in login and register
 export const registerUser = async(req:Request,res:Response)=> {
     try {
-        const {username,email,password} = req.body as User
-        if(!username||!email||!password){
-            return res.json({
-                success:false,
-                message:"All fields are required"
+         const validateBody = newUserSchema.safeParse(req.body)
+         if(!validateBody.success){
+            return res.status(400).json({
+                message:"Bad request"
             })
-        }
+         }
+         const {
+            username,
+            email,
+            password
+         } = validateBody.data
         const user = await prisma.user.findFirst({where:{email}})
         if(user){
              return res.json({
@@ -23,8 +23,8 @@ export const registerUser = async(req:Request,res:Response)=> {
                 message:"User already exists"
             })
         }
-        const salt = await bcrypt.genSalt(10);
-        const hashedpassword = await bcrypt.hash(password,salt)
+        
+        const hashedpassword = await hashPassword(password)
         const newUser = await prisma.user.create({
             data:{
                 username,
@@ -33,7 +33,6 @@ export const registerUser = async(req:Request,res:Response)=> {
             }
         })
         const token = createToken(newUser.id)
-        
         const metadata = {
             name : username,
             email :email ,
@@ -56,7 +55,17 @@ export const registerUser = async(req:Request,res:Response)=> {
 }
 export const loginUser= async(req:Request,res:Response) =>  {
     try {
-        const {email,password} = req.body as User
+        const validateBody = userLoginSchema.safeParse(req.body)
+        if(!validateBody.success){
+            return res.status(400).json({
+                success:false,
+                message:"Bad request"
+            })
+        }
+        const{
+            email,
+            password
+        } = validateBody.data
         if(!email || !password){
             return res.json({
                 success:false,
@@ -70,14 +79,8 @@ export const loginUser= async(req:Request,res:Response) =>  {
                 message:"User doesnot exist"
             })
         }
-        const isMatch = await bcrypt.compare(password,user.password)
-        if(!user){
-            return res.json({
-                success:false,
-                message:"User does not exist"
-            })
-        }
-        if(isMatch){
+        const checkPassword = await validatePassword(password,user.password)
+        if(checkPassword){
             const token = createToken(user.id)
             const metadata = {
                 name:user.username,
@@ -121,6 +124,7 @@ export const logoutUser = async (req:Request,res:Response) => {
 
 export const me = async (req:Request,res:Response) => {
     try {
+        // const userId = await req.
         
     } catch (error) {
         console.log(error)
