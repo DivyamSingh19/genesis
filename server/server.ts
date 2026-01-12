@@ -4,17 +4,12 @@ import cors from "cors"
 import connectCloudinary from "./config/cloudinary";
 import userRouter from "./routes/auth";
 import dotenv from "dotenv"
- import amqp from "amqplib"
+ 
 
 const app = express();
 const port =process.env.PORT || 4000
 dotenv.config()
-  
- const connection = await amqp.connect(process.env.MQ_URL as string)
- 
- const channel1 = await connection.createChannel();
- await channel1.prefetch(1)
- console.log("MQ connected")
+
 //middlewares
 app.use(express.json())
 const allowedOrigins =['http://localhost:3000'];

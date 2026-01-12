@@ -4,9 +4,8 @@ const connectCloudinary = ()=>{
     cloudinary.config(
        { 
         cloud_name:process.env.CLOUDINARY_NAME,
-        cloudinaryApi: process.env.CLOUDINARY_API,
-        cloudinarySecret : process.env.CLOUDINARY_SECRET,
-
+        cloudinaryApi: process.env.CLOUDINARY_API_KEY,
+        cloudinarySecret : process.env.CLOUDINARY_SECRET_KEY,
         }
     )
     console.log("Cloudinary connected")

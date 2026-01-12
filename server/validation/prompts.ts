@@ -1,2 +1,2 @@
 // length validation
-// image? validation
+// image? validation (on the frontend)
