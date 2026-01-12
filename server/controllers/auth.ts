@@ -2,6 +2,8 @@ import { Request,Response } from "express";
 import prisma from "../utils/prisma";
 import { createToken,hashPassword,validatePassword, } from "../utils/tokens";
 import { userLoginSchema,newUserSchema } from "../validation/auth";
+import { AuthService } from "../services/auth.service";
+import { UserService } from "../services/user.service";
 //implement cookies here in login and register
 export const registerUser = async(req:Request,res:Response)=> {
     try {
@@ -110,29 +112,42 @@ export const loginUser= async(req:Request,res:Response) =>  {
 }
  
 
-export const logoutUser = async (req:Request,res:Response) => {
-    try {
-        
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success:false,
-            message:(error as Error).message
-        })
-    }
-}
-
-export const me = async (req:Request,res:Response) => {
-    try {
-        // const userId = await req.
-        
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success:false,
-            message:(error as Error).message
-        })
-    }
-}
-
  
+export class AuthController{
+    private authService:AuthService;
+    private userService:UserService
+
+    constructor(){
+        this.authService = new AuthService
+        this.userService = new UserService
+    }
+
+    registerUser = async (req:Request,res:Response) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+    loginUser = async (req:Request,res:Response) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+    me = async (req:Request,res:Response) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+    logout = async (req:Request, res:Response) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+}
