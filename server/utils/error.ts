@@ -5,5 +5,6 @@ export enum HttpStatus{
     Notfound= 404,
     ServerError=500,
     RateLimitReeached=429,
-    Forbidden=403
+    Forbidden=403,
+    Conflict=409
 }

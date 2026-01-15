@@ -15,7 +15,8 @@ export class UserService{
             const data ={
                 email:user.email,
                 id:user.id,
-                username:user.username
+                username:user.username,
+                password:user.password
             }
             return data
         } catch (error) {
