@@ -1,10 +1,6 @@
 import { Request,Response, NextFunction } from "express";
 
 
-type UserPayload = {
-
-}
-
 export const authMiddleware = async (req:Request,res:Response,next:NextFunction) => {
     const token = req.cookies.auth_token
     if(!token){
