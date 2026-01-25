@@ -1,20 +1,10 @@
 import { Request,Response } from "express";
 import prisma from "../utils/prisma";
-import { createToken,hashPassword,validatePassword,validatePassword, } from "../utils/tokens";
+import { createToken,hashPassword, validatePassword } from "../utils/tokens";
 import { userLoginSchema,newUserSchema } from "../validation/auth";
 import { UserService } from "../services/user.service";
 import { HttpStatus } from "../utils/error";
 
-  
-
-        const user = await prisma.user.findFirst({where:{email},select:{username:true,id:true,credit:true,password:true}})
-        if(!user){
-            return res.status(401).json({
-                success:false,
-                message:"User doesnot exist"
-            })
-        }
-        const checkPassword = await validatePassword(password,user.password)
 export class AuthController{
     private userService:UserService
     constructor(){
@@ -89,7 +79,7 @@ export class AuthController{
                     message:"User not found"
                 })
             }
-            const checkPassword = await validatePassword()
+            const checkPassword = await validatePassword(password,user.password)
             
         } catch (error) {
             return res.status(HttpStatus.ServerError).json({
@@ -132,8 +122,10 @@ export class AuthController{
     logout = async (req:Request, res:Response) => {
         try {
             res.cookie("auth_token","",{
-
-            })
+                httpOnly:true,
+                sameSite:false,
+                secure:true
+          })
         } catch (error) {
             return res.status(HttpStatus.ServerError).json({
                 success:false,

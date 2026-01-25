@@ -26,3 +26,13 @@ export class NotFoundError extends Error{
         this.name="NotFoundError"
     }
 }
+
+
+export class ServerError extends Error{
+    statusCode:number
+    constructor(message:string){
+        super(message)
+        this.statusCode=HttpStatus.ServerError
+        this.name= "Server Error"
+    }
+}
